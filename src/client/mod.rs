@@ -4,6 +4,8 @@ use std::net::TcpStream;
 use std::marker::PhantomData;
 use std::io::Result as IoResult;
 
+use net2::TcpBuilder;
+
 use ws;
 use ws::util::url::ToWebSocketUrlComponents;
 use ws::receiver::{DataFrameIterator, MessageIterator};
@@ -41,11 +43,11 @@ pub mod response;
 ///#Connecting to a Server
 ///
 ///```no_run
-///extern crate websocket_vi;
+///extern crate websocket_reuseaddr;
 ///# fn main() {
 ///
-///use websocket_vi::{Client, Message};
-///use websocket_vi::client::request::Url;
+///use websocket_reuseaddr::{Client, Message};
+///use websocket_reuseaddr::client::request::Url;
 ///
 ///let url = Url::parse("ws://127.0.0.1:1234").unwrap(); // Get the URL
 ///let request = Client::connect(url).unwrap(); // Connect to the server
@@ -93,7 +95,9 @@ impl Client<DataFrame, Sender<WebSocketStream>, Receiver<WebSocketStream>> {
 			return Err(::result::WebSocketError::SslFeatureNotEnabled);
 		}}
 
-		let connection = try!(TcpStream::connect(
+		let tcp = TcpBuilder::new_v4().unwrap();
+		let tcp = tcp.reuse_address(true).unwrap().only_v6(false).unwrap();
+		let connection = try!(tcp.connect(
 			(&host.hostname[..], host.port.unwrap_or(if secure { 443 } else { 80 }))
 		));
 
@@ -170,10 +174,10 @@ impl<F: DataFrameable, S: ws::Sender, R: ws::Receiver<F>> Client<F, S, R> {
 	/// Returns an iterator over incoming messages.
 	///
 	///```no_run
-	///# extern crate websocket_vi;
+	///# extern crate websocket_reuseaddr;
 	///# fn main() {
-	///use websocket_vi::{Client, Message};
-	///# use websocket_vi::client::request::Url;
+	///use websocket_reuseaddr::{Client, Message};
+	///# use websocket_reuseaddr::client::request::Url;
 	///# let url = Url::parse("ws://127.0.0.1:1234").unwrap(); // Get the URL
 	///# let request = Client::connect(url).unwrap(); // Connect to the server
 	///# let response = request.send().unwrap(); // Send the request
@@ -193,10 +197,10 @@ impl<F: DataFrameable, S: ws::Sender, R: ws::Receiver<F>> Client<F, S, R> {
 	/// `Receiver` to be able to send messages within an iteration.
 	///
 	///```no_run
-	///# extern crate websocket_vi;
+	///# extern crate websocket_reuseaddr;
 	///# fn main() {
-	///use websocket_vi::{Client, Message, Sender, Receiver};
-	///# use websocket_vi::client::request::Url;
+	///use websocket_reuseaddr::{Client, Message, Sender, Receiver};
+	///# use websocket_reuseaddr::client::request::Url;
 	///# let url = Url::parse("ws://127.0.0.1:1234").unwrap(); // Get the URL
 	///# let request = Client::connect(url).unwrap(); // Connect to the server
 	///# let response = request.send().unwrap(); // Send the request
@@ -238,11 +242,11 @@ impl<F: DataFrameable, S: ws::Sender, R: ws::Receiver<F>> Client<F, S, R> {
 	/// This allows the Sender and Receiver to be sent to different threads.
 	///
 	///```no_run
-	///# extern crate websocket_vi;
+	///# extern crate websocket_reuseaddr;
 	///# fn main() {
-	///use websocket_vi::{Client, Message, Sender, Receiver};
+	///use websocket_reuseaddr::{Client, Message, Sender, Receiver};
 	///use std::thread;
-	///# use websocket_vi::client::request::Url;
+	///# use websocket_reuseaddr::client::request::Url;
 	///# let url = Url::parse("ws://127.0.0.1:1234").unwrap(); // Get the URL
 	///# let request = Client::connect(url).unwrap(); // Connect to the server
 	///# let response = request.send().unwrap(); // Send the request

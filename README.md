@@ -13,7 +13,7 @@ To add a library release version from [crates.io](https://crates.io/crates/webso
 websocket-vi = "~0.18.0"
 ```
 
-And add ```extern crate websocket_vi;``` to your project.
+And add ```extern crate websocket_reuseaddr;``` to your project.
 
 ## Usage
 

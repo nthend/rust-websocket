@@ -22,10 +22,10 @@ pub mod response;
 ///#Non-secure Servers
 ///
 /// ```no_run
-///extern crate websocket_vi;
+///extern crate websocket_reuseaddr;
 ///# fn main() {
 ///use std::thread;
-///use websocket_vi::{Server, Message};
+///use websocket_reuseaddr::{Server, Message};
 ///
 ///let server = Server::bind("127.0.0.1:1234").unwrap();
 ///
@@ -48,14 +48,14 @@ pub mod response;
 ///#Secure Servers
 /// ```no_run
 ///# #[cfg(feature="ssl")] pub mod ssltest {
-///extern crate websocket_vi;
+///extern crate websocket_reuseaddr;
 ///extern crate openssl;
 ///# pub fn main() {
-///# use self::websocket_vi;
+///# use self::websocket_reuseaddr;
 ///# use self::openssl;
 ///use std::thread;
 ///use std::path::Path;
-///use self::websocket_vi::{Server, Message};
+///use self::websocket_reuseaddr::{Server, Message};
 ///use self::openssl::ssl::{SslContext, SslMethod};
 ///use self::openssl::x509::X509FileType;
 ///

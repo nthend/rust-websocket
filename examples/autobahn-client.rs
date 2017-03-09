@@ -1,10 +1,10 @@
-extern crate websocket_vi;
+extern crate websocket_reuseaddr;
 extern crate rustc_serialize as serialize;
 
 use std::str::from_utf8;
-use websocket_vi::client::request::Url;
-use websocket_vi::{Client, Message, Sender, Receiver};
-use websocket_vi::message::Type;
+use websocket_reuseaddr::client::request::Url;
+use websocket_reuseaddr::{Client, Message, Sender, Receiver};
+use websocket_reuseaddr::message::Type;
 use serialize::json;
 
 fn main() {

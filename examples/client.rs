@@ -1,14 +1,14 @@
-extern crate websocket_vi;
+extern crate websocket_reuseaddr;
 
 fn main() {
 	use std::thread;
 	use std::sync::mpsc::sync_channel;
 	use std::io::stdin;
 
-	use websocket_vi::{Message, Sender, Receiver};
-    use websocket_vi::message::Type;
-	use websocket_vi::client::request::Url;
-	use websocket_vi::Client;
+	use websocket_reuseaddr::{Message, Sender, Receiver};
+    use websocket_reuseaddr::message::Type;
+	use websocket_reuseaddr::client::request::Url;
+	use websocket_reuseaddr::Client;
 
 	let url = Url::parse("ws://127.0.0.1:2794").unwrap();
 

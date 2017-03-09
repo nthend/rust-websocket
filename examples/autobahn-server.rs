@@ -1,9 +1,9 @@
-extern crate websocket_vi;
+extern crate websocket_reuseaddr;
 
 use std::thread;
 use std::str::from_utf8;
-use websocket_vi::{Server, Message, Sender, Receiver};
-use websocket_vi::message::Type;
+use websocket_reuseaddr::{Server, Message, Sender, Receiver};
+use websocket_reuseaddr::message::Type;
 
 fn main() {
 	let addr = "127.0.0.1:9002".to_string();
