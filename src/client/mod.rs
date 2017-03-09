@@ -95,8 +95,8 @@ impl Client<DataFrame, Sender<WebSocketStream>, Receiver<WebSocketStream>> {
 			return Err(::result::WebSocketError::SslFeatureNotEnabled);
 		}}
 
-		let tcp = TcpBuilder::new_v4().unwrap();
-		let tcp = tcp.reuse_address(true).unwrap().only_v6(false).unwrap();
+		let tcp = try!(TcpBuilder::new_v4());
+		try!(try!(tcp.reuse_address(true)).only_v6(false));
 		let connection = try!(tcp.connect(
 			(&host.hostname[..], host.port.unwrap_or(if secure { 443 } else { 80 }))
 		));

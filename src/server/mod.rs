@@ -6,6 +6,8 @@ use std::io;
 pub use self::request::Request;
 pub use self::response::Response;
 
+use net2::TcpBuilder;
+
 use stream::WebSocketStream;
 
 use openssl::ssl::SslContext;
@@ -82,23 +84,34 @@ pub mod response;
 /// # #[cfg(feature="ssl")] fn main() { ssltest::main() }
 /// # #[cfg(not(feature="ssl"))] fn main(){ println!("SSL server test ignored"); }
 /// ```
+
 pub struct Server<'a> {
 	inner: TcpListener,
 	context: Option<&'a SslContext>,
 }
 
 impl<'a> Server<'a> {
+	fn make_builder() -> io::Result<TcpBuilder> {
+		let tcp = try!(TcpBuilder::new_v4());
+		try!(try!(tcp.reuse_address(true)).only_v6(false));
+		Ok(tcp)
+	}
+
 	/// Bind this Server to this socket
 	pub fn bind<T: ToSocketAddrs>(addr: T) -> io::Result<Server<'a>> {
+		let builder = try!(Self::make_builder());
+		try!(builder.bind(&addr));
 		Ok(Server {
-			inner: try!(TcpListener::bind(&addr)),
+			inner: try!(builder.listen(128)),
 			context: None,
 		})
 	}
 	/// Bind this Server to this socket, utilising the given SslContext
 	pub fn bind_secure<T: ToSocketAddrs>(addr: T, context: &'a SslContext) -> io::Result<Server<'a>> {
+		let builder = try!(Self::make_builder());
+		try!(builder.bind(&addr));
 		Ok(Server {
-			inner: try!(TcpListener::bind(&addr)),
+			inner: try!(builder.listen(128)),
 			context: Some(context),
 		})
 	}

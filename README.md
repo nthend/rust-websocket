@@ -10,7 +10,7 @@ Rust-WebSocket provides a framework for dealing with WebSocket connections (both
 To add a library release version from [crates.io](https://crates.io/crates/websocket) to a Cargo project, add this to the 'dependencies' section of your Cargo.toml:
 
 ```INI
-websocket-vi = "~0.18.0"
+websocket-reuseaddr = { git = "https://github.com/nthend/rust-websocket.git", branch = "master" }
 ```
 
 And add ```extern crate websocket_reuseaddr;``` to your project.
